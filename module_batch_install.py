@@ -64,7 +64,7 @@ def convert(file, destination, filters):
         id = json_data['id']
         title = json_data['title']
         description = json_data['description']
-        author = json_data['author']
+        authors = json_data['authors']
         name = json_data['name']
         version = json_data['version']
         manifest = json_data['manifest']
