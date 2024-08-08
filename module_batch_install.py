@@ -65,17 +65,17 @@ def convert(file, destination, filters):
         title = json_data['title']
         description = json_data['description']
         authors = json_data['authors']
-        name = json_data['name']
+        #name = json_data['name']
         version = json_data['version']
         manifest = json_data['manifest']
         download = json_data['download']
 
-        module_dir = os.path.join(destination, name)
+        module_dir = os.path.join(destination, title)
 
         json_data['version'] = '0.0.0'
 
         print('-- Module: ', title)
-        print(name, id, manifest)
+        print(title, id, manifest)
 
         #if not os.path.isdir(module_dir):
         #    os.mkdir(module_dir)
@@ -83,7 +83,7 @@ def convert(file, destination, filters):
         #with open(os.path.join(module_dir, 'module.json'), 'w') as json_file:
         #    json.dump(json_data, json_file, indent='  ')
 
-        print(f'Installed {name}: {title}')
+        print(f'Installed {id}: {title}')
 
 
 def main():
