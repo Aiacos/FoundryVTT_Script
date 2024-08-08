@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import urllib.request
+from tqdm import tqdm
 
 
 def dir_tester(path):
@@ -25,20 +26,25 @@ def parse_args():
 
 
 def convert(file, destination, filters):
-    file_content = file.read().lower()
+    # Opening JSON file
+    print('File: ', file, type(file))
+    f = open(file)
 
-    link_finder = re.compile('"?(https?://[a-z0-9/=&%-\.\?]*)"?')
-    links = link_finder.finditer(file_content)
-
+    # returns JSON object as
+    # a dictionary
+    data = json.load(f)
+    module_list = data['modules']
     filtered_links = []
 
-    for link in links:
-        link = link.group(1)
+    try:
+        for mod in module_list:
+            manifest = mod['manifest']
+            filtered_links.append(manifest)
+    except:
+        print('No Manifest Found on: ', mod['id'])
 
-        if not filters or any(needle.lower() in link for needle in filters):
-            filtered_links.append(link)
 
-    for link in filtered_links:
+    for link in tqdm(filtered_links):
         print(f'Downloading {link}... ', end='')
 
         try:
@@ -53,17 +59,29 @@ def convert(file, destination, filters):
 
         print('Done.')
 
-        json_data['version'] = '0.0.0'
 
-        name = json_data['name']
+
+        id = json_data['id']
         title = json_data['title']
+        description = json_data['description']
+        author = json_data['author']
+        name = json_data['name']
+        version = json_data['version']
+        manifest = json_data['manifest']
+        download = json_data['download']
+
         module_dir = os.path.join(destination, name)
 
-        if not os.path.isdir(module_dir):
-            os.mkdir(module_dir)
+        json_data['version'] = '0.0.0'
 
-        with open(os.path.join(module_dir, 'module.json'), 'w') as json_file:
-            json.dump(json_data, json_file, indent='  ')
+        print('-- Module: ', title)
+        print(name, id, manifest)
+
+        #if not os.path.isdir(module_dir):
+        #    os.mkdir(module_dir)
+
+        #with open(os.path.join(module_dir, 'module.json'), 'w') as json_file:
+        #    json.dump(json_data, json_file, indent='  ')
 
         print(f'Installed {name}: {title}')
 
