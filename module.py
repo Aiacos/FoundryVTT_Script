@@ -3,7 +3,6 @@
 import os
 import time
 import json
-from os.path import isfile
 import urllib.request as rq
 import zipfile
 
@@ -32,11 +31,11 @@ class Module(object):
             if ovveride_version:
                 self.version = "0.0.0"
 
-            if self.id:
+            if self.name:
                 # module_dir = os.path.join(destination, self.id)
 
                 if self.download:
-                    file_name = self.id + ".zip"  # str(self.download).split("/")[-1]
+                    file_name = self.name + ".zip"  # str(self.download).split("/")[-1]
                     full_path = os.path.join(destination, file_name)
                     rq.urlretrieve(self.download, full_path)
 
@@ -44,7 +43,9 @@ class Module(object):
                         time.sleep(0.1)
 
                     with zipfile.ZipFile(full_path, "r") as zip_ref:
-                        zip_ref.extractall(destination)
+                        zip_ref.extractall(destination + self.name)
+
+                    os.remove(full_path)
 
                 # if not os.path.isdir(module_dir):
                 #    os.mkdir(module_dir)

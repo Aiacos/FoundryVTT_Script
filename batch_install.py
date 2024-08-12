@@ -55,8 +55,9 @@ def convert(file, destination):
             manifest = mod["manifest"]
             filtered_links.append(manifest)
 
+    mod_instance_list = []
     for link in tqdm(filtered_links):
-        print(f"Downloading {link}... ", end="")
+        # print(f"Downloading {link}... ", end="")
 
         try:
             with urllib.request.urlopen(link) as url_file:
@@ -65,15 +66,21 @@ def convert(file, destination):
             if "manifest" not in json_data or "download" not in json_data:
                 raise Exception()
         except Exception:
-            print("Module not found.")
+            # print("Module not found.")
             continue
 
         # print("Done Parsing Manifest")
 
         module_instance = module.Module(json_data)
         module_instance.install_module(destination)
+        mod_instance_list.append(module_instance)
 
-        print(f"Installed {module_instance.id}: {module_instance.title}")
+    print("Skiped Modules: ")
+    for mod in mod_instance_list:
+        if mod.is_valid:
+            print("id: ", mod.id, "name: ", mod.name)
+
+        # print(f"Installed {module_instance.id}: {module_instance.title}")
 
 
 def main():
