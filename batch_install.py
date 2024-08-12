@@ -78,7 +78,7 @@ def convert(file, destination):
     print("Skiped Modules: ")
     for mod in mod_instance_list:
         if mod.is_valid:
-            print("id: ", mod.id, "name: ", mod.name)
+            print(" -- id: ", mod.id, "  -- name: ", mod.name)
 
         # print(f"Installed {module_instance.id}: {module_instance.title}")
 
