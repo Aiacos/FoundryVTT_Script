@@ -73,7 +73,7 @@ def convert(file, destination):
 
         module_instance = module.Module(json_data)
         # module_instance.install_module(destination)
-        module_instance.debug()
+        module_instance._debug()
 
         print(f"Installed {module_instance.id}: {module_instance.title}")
 

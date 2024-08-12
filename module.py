@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import os
 import json
 
@@ -42,5 +43,5 @@ class Module(object):
         else:
             return None
 
-    def debug(self):
+    def _debug(self):
         print(json.dumps(self.data_dict, indent=2))
