@@ -1,7 +1,11 @@
 #!/usr/bin/python
 
 import os
+import time
 import json
+from os.path import isfile
+import urllib.request as rq
+import zipfile
 
 
 class Module(object):
@@ -29,13 +33,24 @@ class Module(object):
                 self.version = "0.0.0"
 
             if self.id:
-                module_dir = os.path.join(destination, self.id)
+                # module_dir = os.path.join(destination, self.id)
 
-                if not os.path.isdir(module_dir):
-                    os.mkdir(module_dir)
+                if self.download:
+                    file_name = self.id + ".zip"  # str(self.download).split("/")[-1]
+                    full_path = os.path.join(destination, file_name)
+                    rq.urlretrieve(self.download, full_path)
 
-                with open(os.path.join(module_dir, "module.json"), "w") as json_file:
-                    json.dump(self.data_dict, json_file, indent="  ")
+                    while not os.path.isfile(full_path):
+                        time.sleep(0.1)
+
+                    with zipfile.ZipFile(full_path, "r") as zip_ref:
+                        zip_ref.extractall(destination)
+
+                # if not os.path.isdir(module_dir):
+                #    os.mkdir(module_dir)
+
+                # with open(os.path.join(module_dir, "module.json"), "w") as json_file:
+                #    json.dump(self.data_dict, json_file, indent="  ")
 
     def _parse_value(self, key):
         if key in self.data_dict:
