@@ -28,11 +28,11 @@ class Module(object):
             if ovveride_version:
                 self.version = "0.0.0"
 
-            if not os.path.isdir(destination):
-                os.mkdir(destination)
+            if self.id:
+                module_dir = os.path.join(destination, self.id)
 
-            if self.title:
-                module_dir = os.path.join(destination, self.title)
+                if not os.path.isdir(module_dir):
+                    os.mkdir(module_dir)
 
                 with open(os.path.join(module_dir, "module.json"), "w") as json_file:
                     json.dump(self.data_dict, json_file, indent="  ")

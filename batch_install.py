@@ -42,7 +42,6 @@ def convert(file, destination):
 
         return None
 
-    print("File: ", file, type(file))
     f = open(file)
 
     # returns JSON object as
@@ -72,8 +71,7 @@ def convert(file, destination):
         # print("Done Parsing Manifest")
 
         module_instance = module.Module(json_data)
-        # module_instance.install_module(destination)
-        module_instance._debug()
+        module_instance.install_module(destination)
 
         print(f"Installed {module_instance.id}: {module_instance.title}")
 
