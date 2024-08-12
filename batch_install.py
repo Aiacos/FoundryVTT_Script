@@ -1,9 +1,8 @@
 #!/usr/bin/python
 
+import os
 import argparse
 import json
-import os
-import re
 import sys
 import urllib.request
 from tqdm import tqdm
@@ -22,7 +21,6 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Install Foundry VTT modules from a file with links"
     )
-    parser.add_argument("--filters", nargs="*", help="Link filters")
     parser.add_argument("file", help="File containing links")
     parser.add_argument(
         "destination", type=dir_tester, help="Destination directory for modules"
@@ -31,7 +29,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def convert(file, destination, filters):
+def convert(file, destination):
     # Opening JSON file
 
     if not os.path.isdir(destination):
@@ -91,7 +89,7 @@ def main():
     sys.stdout.flush()
 
     args = parse_args()
-    convert(args.file, args.destination, args.filters)
+    convert(args.file, args.destination)
 
 
 if __name__ == "__main__":

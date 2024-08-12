@@ -19,8 +19,6 @@ class Module(object):
         self.download = self._parse_value("download")
 
         if self.manifest and self.download:
-            # Ovveride version:
-            version = "0.0.0"
             self.is_valid = True
 
     def install_module(self, destination, ovveride_version=True):
@@ -32,10 +30,11 @@ class Module(object):
             if not os.path.isdir(destination):
                 os.mkdir(destination)
 
-            module_dir = os.path.join(destination, self.title)
+            if self.title:
+                module_dir = os.path.join(destination, self.title)
 
-            with open(os.path.join(module_dir, "module.json"), "w") as json_file:
-                json.dump(self.data_dict, json_file, indent="  ")
+                with open(os.path.join(module_dir, "module.json"), "w") as json_file:
+                    json.dump(self.data_dict, json_file, indent="  ")
 
     def _parse_value(self, key):
         if key in self.data_dict:
