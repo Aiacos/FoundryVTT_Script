@@ -8,8 +8,8 @@ import zipfile
 
 
 class Module(object):
-    def __init__(self, manifest_data={}):
-        self.data_dict = manifest_data
+    def __init__(self, link=""):
+        self.data_dict = self._parse_link(link)
         self.is_valid = False
 
         self.id = self._parse_value("id")
@@ -31,11 +31,15 @@ class Module(object):
             if ovveride_version:
                 self.version = "0.0.0"
 
-            if self.name:
+            module_name = self.id if self.id else self.name
+
+            if module_name:
                 # module_dir = os.path.join(destination, self.id)
 
                 if self.download:
-                    file_name = self.name + ".zip"  # str(self.download).split("/")[-1]
+                    file_name = (
+                        module_name + ".zip"
+                    )  # str(self.download).split("/")[-1]
                     full_path = os.path.join(destination, file_name)
                     rq.urlretrieve(self.download, full_path)
 
@@ -43,7 +47,7 @@ class Module(object):
                         time.sleep(0.1)
 
                     with zipfile.ZipFile(full_path, "r") as zip_ref:
-                        zip_ref.extractall(destination + self.name)
+                        zip_ref.extractall(destination + module_name)
 
                     os.remove(full_path)
 
@@ -58,6 +62,22 @@ class Module(object):
             return self.data_dict[key]
         else:
             return None
+
+    def _parse_link(self, link):
+        json_data = {}
+
+        try:
+            with rq.urlopen(link) as url_file:
+                json_data = json.load(url_file)
+
+            if "manifest" not in json_data or "download" not in json_data:
+                json_data = {}
+                raise Exception()
+        except Exception:
+            # print("Module not found.")
+            pass
+
+        return json_data
 
     def _debug(self):
         print(json.dumps(self.data_dict, indent=2))

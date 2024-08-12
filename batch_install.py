@@ -4,7 +4,6 @@ import os
 import argparse
 import json
 import sys
-import urllib.request
 from tqdm import tqdm
 
 import module
@@ -59,19 +58,7 @@ def convert(file, destination):
     for link in tqdm(filtered_links):
         # print(f"Downloading {link}... ", end="")
 
-        try:
-            with urllib.request.urlopen(link) as url_file:
-                json_data = json.load(url_file)
-
-            if "manifest" not in json_data or "download" not in json_data:
-                raise Exception()
-        except Exception:
-            # print("Module not found.")
-            continue
-
-        # print("Done Parsing Manifest")
-
-        module_instance = module.Module(json_data)
+        module_instance = module.Module(link)
         module_instance.install_module(destination)
         mod_instance_list.append(module_instance)
 
