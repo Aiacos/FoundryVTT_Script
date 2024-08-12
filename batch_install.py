@@ -8,6 +8,8 @@ import sys
 import urllib.request
 from tqdm import tqdm
 
+import module
+
 
 def dir_tester(path):
     if not os.path.isdir(path):
@@ -31,6 +33,17 @@ def parse_args():
 
 def convert(file, destination, filters):
     # Opening JSON file
+
+    if not os.path.isdir(destination):
+        print("Invalid Destination")
+
+        return None
+
+    if not os.path.isfile(file):
+        print("Invalid File")
+
+        return None
+
     print("File: ", file, type(file))
     f = open(file)
 
@@ -40,12 +53,10 @@ def convert(file, destination, filters):
     module_list = data["modules"]
     filtered_links = []
 
-    try:
-        for mod in module_list:
+    for mod in module_list:
+        if "manifest" in mod:
             manifest = mod["manifest"]
             filtered_links.append(manifest)
-    except:
-        print("No Manifest Found on: ", mod["id"])
 
     for link in tqdm(filtered_links):
         print(f"Downloading {link}... ", end="")
@@ -60,31 +71,13 @@ def convert(file, destination, filters):
             print("Module not found.")
             continue
 
-        print("Done.")
+        # print("Done Parsing Manifest")
 
-        id = json_data["id"]
-        title = json_data["title"]
-        description = json_data["description"]
-        authors = json_data["authors"]
-        # name = json_data['name']
-        version = json_data["version"]
-        manifest = json_data["manifest"]
-        download = json_data["download"]
+        module_instance = module.Module(json_data)
+        # module_instance.install_module(destination)
+        module_instance.debug()
 
-        module_dir = os.path.join(destination, title)
-
-        json_data["version"] = "0.0.0"
-
-        print("-- Module: ", title)
-        print(title, id, manifest)
-
-        # if not os.path.isdir(module_dir):
-        #    os.mkdir(module_dir)
-
-        # with open(os.path.join(module_dir, 'module.json'), 'w') as json_file:
-        #    json.dump(json_data, json_file, indent='  ')
-
-        print(f"Installed {id}: {title}")
+        print(f"Installed {module_instance.id}: {module_instance.title}")
 
 
 def main():

@@ -8,24 +8,31 @@ class Module(object):
         self.data_dict = manifest_data
         self.is_valid = False
 
-        id = self._parse_value("id")
-        title = self._parse_value("title")
-        description = self._parse_value("description")
-        authors = self._parse_value("authors")
-        version = self._parse_value("version")
-        manifest = self._parse_value("manifest")
-        download = self._parse_value("download")
+        self.id = self._parse_value("id")
+        self.name = self._parse_value("name")
+        self.title = self._parse_value("title")
+        self.description = self._parse_value("description")
+        self.authors = self._parse_value("authors")
+        self.version = self._parse_value("version")
+        self.url = self._parse_value("url")
+        self.manifest = self._parse_value("manifest")
+        self.download = self._parse_value("download")
 
-        if manifest:
-            if download:
-                # Ovveride version:
-                version = "0.0.0"
-                self.is_valid = True
+        if self.manifest and self.download:
+            # Ovveride version:
+            version = "0.0.0"
+            self.is_valid = True
 
-    def install_module(self, module_dir):
+    def install_module(self, destination, ovveride_version=True):
         if self.is_valid:
-            if not os.path.isdir(module_dir):
-                os.mkdir(module_dir)
+            # Version Override
+            if ovveride_version:
+                self.version = "0.0.0"
+
+            if not os.path.isdir(destination):
+                os.mkdir(destination)
+
+            module_dir = os.path.join(destination, self.title)
 
             with open(os.path.join(module_dir, "module.json"), "w") as json_file:
                 json.dump(self.data_dict, json_file, indent="  ")
@@ -35,3 +42,6 @@ class Module(object):
             return self.data_dict[key]
         else:
             return None
+
+    def debug(self):
+        print(json.dumps(self.data_dict, indent=2))
