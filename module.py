@@ -7,8 +7,19 @@ import urllib.request as rq
 import zipfile
 
 
-class Module(object):
+class Module:
+    """
+    Module
+    """
+
     def __init__(self, link=""):
+        """
+        Constructor
+
+        Args:
+            link (str): Module link
+
+        """
         self.data_dict = self._parse_link(link)
         self.is_valid = False
 
@@ -26,6 +37,13 @@ class Module(object):
             self.is_valid = True
 
     def install_module(self, destination, ovveride_version=True):
+        """
+        Install module
+
+        Args:
+            destination (str): Destination directory
+
+        """
         if self.is_valid:
             # Version Override
             if ovveride_version:
@@ -58,12 +76,24 @@ class Module(object):
                 #    json.dump(self.data_dict, json_file, indent="  ")
 
     def _parse_value(self, key):
+        """
+        Parse value
+
+        Args:
+            key (str): Key
+        """
         if key in self.data_dict:
             return self.data_dict[key]
-        else:
-            return None
+
+        return None
 
     def _parse_link(self, link):
+        """
+        Parse link
+
+        Args:
+            link (str): Link
+        """
         json_data = {}
 
         try:
@@ -80,4 +110,7 @@ class Module(object):
         return json_data
 
     def _debug(self):
+        """
+        Debug
+        """
         print(json.dumps(self.data_dict, indent=2))

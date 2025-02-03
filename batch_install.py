@@ -10,6 +10,12 @@ import module
 
 
 def dir_tester(path):
+    """
+    Directory tester
+
+    Args:
+        path (str): Path
+    """
     if not os.path.isdir(path):
         raise argparse.ArgumentTypeError("Destination directory does not exist")
 
@@ -17,6 +23,9 @@ def dir_tester(path):
 
 
 def parse_args():
+    """
+    Parse arguments
+    """
     parser = argparse.ArgumentParser(
         description="Install Foundry VTT modules from a file with links"
     )
@@ -29,17 +38,27 @@ def parse_args():
 
 
 def convert(file, destination):
+    """
+    Convert
+
+    Args:
+        file (str): File
+        destination (str): Destination
+
+    Returns:
+        None
+    """
     # Opening JSON file
 
     if not os.path.isdir(destination):
         print("Invalid Destination")
 
-        return None
+        return
 
     if not os.path.isfile(file):
         print("Invalid File")
 
-        return None
+        return
 
     f = open(file)
 
@@ -71,6 +90,9 @@ def convert(file, destination):
 
 
 def main():
+    """
+    Main
+    """
     print()
     print("============================")
     print("Foundry VTT module installer")
