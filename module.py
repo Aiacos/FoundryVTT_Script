@@ -1,8 +1,12 @@
 #!/usr/bin/python
 
+"""
+Module
+"""
+
+import json
 import os
 import time
-import json
 import urllib.request as rq
 import zipfile
 

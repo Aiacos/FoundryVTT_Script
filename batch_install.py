@@ -1,9 +1,14 @@
 #!/usr/bin/python
 
-import os
+"""
+Batch Install
+"""
+
 import argparse
 import json
+import os
 import sys
+
 from tqdm import tqdm
 
 import module
